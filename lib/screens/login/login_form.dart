@@ -2,6 +2,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:magit/components/login/alertFieldsIncorrects.dart';
 import 'package:magit/database/dao/user_dao.dart';
+import 'package:magit/models/user.dart';
 import 'package:magit/screens/menu/menu.dart';
 
 const _titleAppBar = 'LOGIN';
