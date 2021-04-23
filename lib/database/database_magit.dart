@@ -7,7 +7,7 @@ Future<Database> getDatabase() async {
     onCreate: (db, version) {
       return db.execute('CREATE TABLE users('
           'id INTEGER PRIMARY KEY AUTOINCREMENT,'
-          'nome TEXT NOT NULL,'
+          'name TEXT NOT NULL UNIQUE,'
           'email TEXT NOT NULL UNIQUE,'
           'password TEXT NOT NULL);'
           'CREATE TABLE tasks('

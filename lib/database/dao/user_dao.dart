@@ -23,18 +23,18 @@ class UserDao {
   Map<String, dynamic> _toMap(User user) {
     final Map<String, dynamic> userMap = Map();
 
-    userMap['nome'] = user.nome;
+    userMap['name'] = user.name;
     userMap['email'] = user.email;
     userMap['password'] = user.password;
     return userMap;
   }
 
-  Future<List<User>> find(String email, String password) async {
+  Future<List<User>> find(String name, String password) async {
     try {
       final Database db = await getDatabase();
       final List<Map<String, dynamic>> results = await db.rawQuery(
-          'SELECT * FROM users WHERE email=? and password=? ',
-          ['$email', '$password']);
+          'SELECT * FROM users WHERE name=? and password=? ',
+          ['$name', '$password']);
       List<User> users = _toList(results);
       return users;
     } catch (error) {
@@ -47,7 +47,7 @@ class UserDao {
     final List<User> users = [];
     for (Map<String, dynamic> result in results) {
       final User user =
-          User(result['nome'], result['email'], result['password']);
+          User(result['name'], result['email'], result['password']);
       user.id = result['id'];
       users.add(user);
     }

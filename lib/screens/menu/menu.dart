@@ -16,7 +16,7 @@ class Menu extends StatelessWidget {
       body: Column(
         children: <Widget>[
           Text(_user.id.toString()),
-          Text(_user.nome),
+          Text(_user.name),
           Text(_user.email),
           Text(_user.password),
         ],

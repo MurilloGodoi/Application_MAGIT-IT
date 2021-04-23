@@ -7,7 +7,7 @@ import 'package:magit/screens/menu/menu.dart';
 
 const _titleAppBar = 'LOGIN';
 
-const _labelEmail = 'Email';
+const _labelName = 'Usuário';
 const _labelPassword = 'Senha';
 const _labelButtonLogin = 'ENTRAR';
 
@@ -17,7 +17,7 @@ class LoginForm extends StatefulWidget {
 }
 
 class _LoginFormState extends State<LoginForm> {
-  final TextEditingController _controllerEmail = TextEditingController();
+  final TextEditingController _controllerName = TextEditingController();
 
   final TextEditingController _controllerPassword = TextEditingController();
 
@@ -27,7 +27,7 @@ class _LoginFormState extends State<LoginForm> {
   Widget build(BuildContext context) {
     /// Descomente as duas linhas de baixo para criar um usuário
     /// é preciso rodar o app com essas duas linhas, após isso vc pode exclui-la e já logar com seu usuario criado 
-    //final User user = User('Daniel', 'daniel@gmail.com', '123456');
+    //final User user = User('Murillo', 'murillo@gmail.com', '123456');
     //_userDao.create(user);
     return Scaffold(
       resizeToAvoidBottomInset: false,
@@ -46,8 +46,8 @@ class _LoginFormState extends State<LoginForm> {
           padding: const EdgeInsets.all(16.0),
           child: Column(children: <Widget>[
             TextField(
-              decoration: InputDecoration(labelText: _labelEmail),
-              controller: _controllerEmail,
+              decoration: InputDecoration(labelText: _labelName),
+              controller:  _controllerName,
               style: TextStyle(fontSize: 24.0),
               keyboardType: TextInputType.text,
             ),
@@ -78,11 +78,11 @@ class _LoginFormState extends State<LoginForm> {
   }
 
   void _logIn(BuildContext context) {
-    final String email = _controllerEmail.text;
+    final String name =  _controllerName.text;
     final String password = _controllerPassword.text;
 
-    if (_checkDataFieldsLogin(email, password)) {
-      _userDao.find(email, password).then((users) {
+    if (_checkDataFieldsLogin(name, password)) {
+      _userDao.find(name, password).then((users) {
         if (users.length > 0) {
           Navigator.push(
             context,
@@ -95,8 +95,8 @@ class _LoginFormState extends State<LoginForm> {
     }
   }
 
-  bool _checkDataFieldsLogin(String email, String password) {
-    if (email.length > 0 && password.length > 0) {
+  bool _checkDataFieldsLogin(String name, String password) {
+    if (name.length > 0 && password.length > 0) {
       return true;
     }
     return false;

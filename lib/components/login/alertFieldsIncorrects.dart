@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-const _alertTitle = 'Email ou senha incorretos';
+const _alertTitle = 'Usuario ou senha incorreto(a)s';
 const _alertSubTitle = 'Por favor preencha os campos corretamente';
 
 Future<void> alertFieldsIncorrects(BuildContext context) async {
