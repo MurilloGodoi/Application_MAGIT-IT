@@ -1,20 +1,20 @@
 class Task {
-  final int id;
+  late int id;
   final int userId;
   late bool _active;
   late bool _paused;
   final String title;
   final String subtitle;
-  final String  housePlace;
+  final String housePlace;
   final DateTime assignedDate;
   late DateTime _startTime;
   late DateTime _endTime;
   late DateTime _auxTime;
-  late double _totalTime;
-  final String occurrence;
+  late double _totalHours;
+  late String _occurrence;
 
-  Task(this.id, this.userId, this.title, this.subtitle, this.assignedDate,
-      this._active, this.housePlace, this.occurrence);
+  Task(this.userId, this._active, this._paused, this.title, this.subtitle,
+      this.housePlace, this.assignedDate);
 
   set endTime(DateTime endTime) {
     _endTime = endTime;
@@ -32,11 +32,15 @@ class Task {
     _auxTime = auxTime;
   }
 
-  set totalTime(double totalTime) {
-    _totalTime = totalTime;
+  set totalHours(double totalHours) {
+    _totalHours = totalHours;
   }
 
   set paused(bool paused) {
     _paused = paused;
+  }
+
+  set occurrence(String occurrence) {
+    _occurrence = occurrence;
   }
 }

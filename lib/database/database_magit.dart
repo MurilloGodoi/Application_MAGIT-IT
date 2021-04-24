@@ -14,11 +14,16 @@ Future<Database> getDatabase() async {
           'id INTEGER PRIMARY KEY AUTOINCREMENT,'
           'userId INTEGER NOT NULL,'
           'active BOOLEAN NOT NULL,'
+          'paused BOOLEAN NOT NULL,'
           'title TEXT NOT NULL,'
           'subtitle TEXT NOT NULL,'
+          'housePlace TEXT NOT NULL,'
           'assignedDate DATETIME NOT NULL'
           'startTime DATETIME,'
           'endTime DATETIME,'
+          'auxTime DATETIME,'
+          'totalHours DECIMAL(10,5),'
+          'occurrence TEXT,'
           ' FOREIGN KEY (userId) REFERENCES users (id))');
     },
     version: 1,
