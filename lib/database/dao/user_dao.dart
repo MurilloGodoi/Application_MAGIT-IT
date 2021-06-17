@@ -1,4 +1,5 @@
 import 'package:magit/models/user.dart';
+// ignore: import_of_legacy_library_into_null_safe
 import 'package:sqflite/sqflite.dart';
 
 import '../database_magit.dart';
@@ -16,7 +17,6 @@ class UserDao {
       );
     } catch (error) {
       print(error);
-      return;
     }
   }
 
@@ -24,7 +24,6 @@ class UserDao {
     final Map<String, dynamic> userMap = Map();
 
     userMap['name'] = user.name;
-    userMap['email'] = user.email;
     userMap['password'] = user.password;
     return userMap;
   }
@@ -46,11 +45,17 @@ class UserDao {
   List<User> _toList(List<Map<String, dynamic>> results) {
     final List<User> users = [];
     for (Map<String, dynamic> result in results) {
-      final User user =
-          User(result['name'], result['email'], result['password']);
+      final User user = User(result['name'], result['email']);
       user.id = result['id'];
       users.add(user);
     }
     return users;
+  }
+
+  Future clearUsers() async {
+    try {
+      final Database db = await getDatabase();
+      db.rawDelete('DELETE FROM users');
+    } catch (error) {}
   }
 }

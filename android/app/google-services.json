@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "769346950322",
+    "project_id": "magit-1fa0b",
+    "storage_bucket": "magit-1fa0b.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:769346950322:android:ef84bf89c2f7bdf373e5ab",
+        "android_client_info": {
+          "package_name": "com.example.magit"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "769346950322-gp4g10ek62igjviqh23a1f9uq56r1svl.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDZ9-hU_pKshFQSSxUYVcUb7oUpfBc8X2w"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "769346950322-gp4g10ek62igjviqh23a1f9uq56r1svl.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

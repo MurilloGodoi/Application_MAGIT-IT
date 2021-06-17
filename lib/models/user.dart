@@ -1,8 +1,8 @@
 class User {
   late int id;
   final String name;
-  final String email;
   final String password;
 
-  User(this.name, this.email, this.password);
+  User(this.name, this.password);
 }
+

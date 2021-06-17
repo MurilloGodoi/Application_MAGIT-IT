@@ -18,9 +18,9 @@ const _titleCardSettings = 'Configurações';
 const _subtitleCardSettings = 'Edite suas configurações';
 
 class Menu extends StatelessWidget {
-  final User _user;
+  final User user;
 
-  const Menu(this._user);
+  const Menu(this.user);
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -52,7 +52,7 @@ class Menu extends StatelessWidget {
               subtitle: Text(_subtitleCardTasks),
               onTap: () => Navigator.push(
                 context,
-                MaterialPageRoute(builder: (context) => TasksList()),
+                MaterialPageRoute(builder: (context) => TasksList(user)),
               ),
             ),
           ),

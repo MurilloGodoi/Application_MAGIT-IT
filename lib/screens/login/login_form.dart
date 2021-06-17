@@ -1,7 +1,9 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:magit/components/login/alertFieldsIncorrects.dart';
+import 'package:magit/database/dao/tasks_dao.dart';
 import 'package:magit/database/dao/user_dao.dart';
+import 'package:magit/models/task.dart';
 import 'package:magit/models/user.dart';
 import 'package:magit/screens/menu/menu.dart';
 
@@ -22,13 +24,36 @@ class _LoginFormState extends State<LoginForm> {
   final TextEditingController _controllerPassword = TextEditingController();
 
   final UserDao _userDao = UserDao();
+  final TasksDao _taskDao = TasksDao();
 
   @override
   Widget build(BuildContext context) {
-    /// Descomente as duas linhas de baixo para criar um usuário
-    /// é preciso rodar o app com essas duas linhas, após isso vc pode exclui-la e já logar com seu usuario criado 
-    //final User user = User('Murillo', 'murillo@gmail.com', '123456');
-    //_userDao.create(user);
+    
+    //Descomente as duas linhas abaixo para criar um usuário no banco de dados para logar no app
+    final User user = User('Murillo', '123456');
+    _userDao.create(user);
+    
+
+    //Descomente as três linhas abaixo da criação da data que será utilizada na criação de uma task
+    DateTime now = new DateTime.now();
+    DateTime dateaux = new DateTime(now.year, now.month, now.day);
+    String date = dateaux.toString();
+  
+  //Descomente a criação da task e seu salvamento no banco de dados pela taskDao
+    final Task task = Task(
+        1,
+        1,
+        0,
+        0,  
+        'Limpar a ferrari',
+        'Limpar o carro direitinho',
+        'Quintal',
+        date,
+        '19:30',
+        'images/carro.jpg',
+        '0');
+    _taskDao.create(task);
+
     return Scaffold(
       resizeToAvoidBottomInset: false,
       appBar: AppBar(
@@ -47,7 +72,7 @@ class _LoginFormState extends State<LoginForm> {
           child: Column(children: <Widget>[
             TextField(
               decoration: InputDecoration(labelText: _labelName),
-              controller:  _controllerName,
+              controller: _controllerName,
               style: TextStyle(fontSize: 24.0),
               keyboardType: TextInputType.text,
             ),
@@ -78,7 +103,7 @@ class _LoginFormState extends State<LoginForm> {
   }
 
   void _logIn(BuildContext context) {
-    final String name =  _controllerName.text;
+    final String name = _controllerName.text;
     final String password = _controllerPassword.text;
 
     if (_checkDataFieldsLogin(name, password)) {
