@@ -1,23 +1,19 @@
 import 'package:flutter/material.dart';
-import 'package:magit/database/dao/tasks_dao.dart';
-import 'package:magit/models/task.dart';
-import 'package:magit/models/user.dart';
+import 'package:magit/model/task.dart';
+import 'package:magit/controller/task_controller.dart';
 
 import 'occurrence_form.dart';
 
 class TaskDetails extends StatefulWidget {
-  final User user;
   final Task task;
 
-  TaskDetails(this.user, this.task);
+  TaskDetails(this.task);
 
   @override
   _TaskDetailsState createState() => _TaskDetailsState();
 }
 
 class _TaskDetailsState extends State<TaskDetails> {
-  final TasksDao _taskDao = TasksDao();
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -39,26 +35,19 @@ class _TaskDetailsState extends State<TaskDetails> {
               dense: true,
             ),
           ),
-          _TaskDetails(
-              widget.task, widget.user, _setStatus(widget.task), 'Status'),
-          _TaskDetails(
-              widget.task, widget.user, widget.task.housePlace, 'Local'),
-          _TaskDetails(
-              widget.task, widget.user, widget.task.assigedTime, 'Horário'),
-          _TaskDetails(
-              widget.task, widget.user, widget.task.subtitle, 'Descrição'),
-          _TaskDetails(
-              widget.task, widget.user, widget.task.totalHours, 'Tempo Gasto'),
-          if (widget.task.paused == 1 &&
-              widget.task.initiated == 1 &&
-              widget.task.active == 1)
+          _TaskDetails(widget.task, _setStatus(widget.task), 'Status'),
+          _TaskDetails(widget.task, widget.task.housePlace, 'Local'),
+          _TaskDetails(widget.task, widget.task.assignedTime, 'Horário'),
+          _TaskDetails(widget.task, widget.task.subtitle, 'Descrição'),
+          _TaskDetails(widget.task, widget.task.totalHours, 'Tempo Gasto'),
+          if (widget.task.paused && widget.task.initiated && widget.task.active)
             Padding(
               padding: const EdgeInsets.all(16.0),
               child: SizedBox(
                 width: double.maxFinite,
                 child: ElevatedButton(
                   child: Text('Retomar a Tarefa'),
-                  onPressed: () => _taskDao.removePauseTask(widget.task).then(
+                  onPressed: () => TaskController.remove(widget.task).then(
                       (value) => alertSuccess(context, 'Tarefa Retomada',
                                   'Tarefa Retomada com sucesso')
                               .then(
@@ -67,14 +56,14 @@ class _TaskDetailsState extends State<TaskDetails> {
                 ),
               ),
             ),
-          if (widget.task.initiated == 0 && widget.task.active == 1)
+          if (!widget.task.initiated && widget.task.active)
             Padding(
               padding: const EdgeInsets.all(16.0),
               child: SizedBox(
                 width: double.maxFinite,
                 child: ElevatedButton(
                   child: Text('Iniciar Tarefa'),
-                  onPressed: () => _taskDao.startTask(widget.task).then(
+                  onPressed: () => TaskController.start(widget.task).then(
                       (value) => alertSuccess(context, 'Tarefa Iniciada',
                                   'Tarefa Iniciada com sucesso')
                               .then(
@@ -83,46 +72,46 @@ class _TaskDetailsState extends State<TaskDetails> {
                 ),
               ),
             ),
-          if (widget.task.paused == 0 &&
-              widget.task.initiated == 1 &&
-              widget.task.active == 1)
+          if (!widget.task.paused &&
+              widget.task.initiated &&
+              widget.task.active)
             Padding(
               padding: const EdgeInsets.all(16.0),
               child: SizedBox(
                 width: double.maxFinite,
                 child: ElevatedButton(
                   child: Text('Pausar Tarefa'),
-                  onPressed: () => _taskDao.pauseTask(widget.task).then(
-                        (value) => alertSuccess(context, 'Tarefa Pausada',
-                                'Tarefa Pausada com sucesso')
-                            .then(
-                          (value) => setState(() {}),
-                        ),
-                      ),
+                  onPressed: () => TaskController.pause(widget.task).then(
+                    (value) => alertSuccess(context, 'Tarefa Pausada',
+                            'Tarefa Pausada com sucesso')
+                        .then(
+                      (value) => setState(() {}),
+                    ),
+                  ),
                 ),
               ),
             ),
-          if (widget.task.initiated == 1 && widget.task.active == 1)
+          if (widget.task.initiated && widget.task.active)
             Padding(
               padding: const EdgeInsets.all(16.0),
               child: SizedBox(
                 width: double.maxFinite,
                 child: ElevatedButton(
                   child: Text('Finalizar tarefa'),
-                  onPressed: () => _taskDao.endTask(widget.task).then(
-                        (value) => alertSuccess(context, 'Tarefa Finalizada',
-                                'Tarefa Finalizada com sucesso')
-                            .then(
-                          (value) => setState(() {}),
-                        ),
-                      ),
+                  onPressed: () => TaskController.end(widget.task).then(
+                    (value) => alertSuccess(context, 'Tarefa Finalizada',
+                            'Tarefa Finalizada com sucesso')
+                        .then(
+                      (value) => setState(() {}),
+                    ),
+                  ),
                   style: ElevatedButton.styleFrom(
                     primary: Colors.red,
                   ),
                 ),
               ),
             ),
-          if (widget.task.active == 1)
+          if (widget.task.active)
             Padding(
               padding: const EdgeInsets.all(16.0),
               child: SizedBox(
@@ -132,7 +121,7 @@ class _TaskDetailsState extends State<TaskDetails> {
                   onPressed: () {
                     Navigator.of(context).push(
                       MaterialPageRoute(
-                        builder: (context) => OcurrenceForm(),
+                        builder: (context) => OcurrenceForm(widget.task),
                       ),
                     );
                   },
@@ -142,16 +131,19 @@ class _TaskDetailsState extends State<TaskDetails> {
           Padding(
             padding: const EdgeInsets.all(16.0),
             child: Center(
-              child: Text('Fotos do Local', style: TextStyle(color: Theme.of(context).primaryColor, fontSize: 16.0),),
+              child: Text(
+                'Fotos do Local',
+                style: TextStyle(
+                    color: Theme.of(context).primaryColor, fontSize: 16.0),
+              ),
             ),
           ),
           Padding(
-            padding: const EdgeInsets.all(16.0),
-            child: Image.asset(
-              widget.task.imagePath,
-              height: 124.0,
-            ),
-          ),
+              padding: const EdgeInsets.all(16.0),
+              child: Image.network(
+                widget.task.imagePath,
+                height: 124.0,
+              )),
         ],
       ),
     );
@@ -160,11 +152,11 @@ class _TaskDetailsState extends State<TaskDetails> {
 
 class _TaskDetails extends StatelessWidget {
   final Task task;
-  final User user;
+
   final String titulo;
   final String subtitulo;
 
-  _TaskDetails(this.task, this.user, this.titulo, this.subtitulo);
+  _TaskDetails(this.task, this.titulo, this.subtitulo);
 
   @override
   Widget build(BuildContext context) {
@@ -182,11 +174,11 @@ class _TaskDetails extends StatelessWidget {
 }
 
 _setStatus(Task task) {
-  if (task.active == 0)
+  if (!task.active)
     return 'Tarefa Finalizada';
-  else if (task.active == 1 && task.paused == 1 && task.initiated == 1) {
+  else if (task.active && task.paused && task.initiated) {
     return 'Tarefa Pausada';
-  } else if (task.active == 1 && task.paused == 0 && task.initiated == 1) {
+  } else if (task.active && !task.paused && task.initiated) {
     return 'Tarefa em Andamento';
   } else {
     return 'Tarefa não Iniciada';

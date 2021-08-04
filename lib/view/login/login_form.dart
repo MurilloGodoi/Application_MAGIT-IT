@@ -1,14 +1,10 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:magit/components/login/alertFieldsIncorrects.dart';
-import 'package:magit/database/dao/tasks_dao.dart';
-import 'package:magit/database/dao/user_dao.dart';
-import 'package:magit/models/task.dart';
-import 'package:magit/models/user.dart';
-import 'package:magit/screens/menu/menu.dart';
+import 'package:magit/view/menu/menu.dart';
 
 const _titleAppBar = 'LOGIN';
-
 const _labelName = 'Usuário';
 const _labelPassword = 'Senha';
 const _labelButtonLogin = 'ENTRAR';
@@ -23,37 +19,8 @@ class _LoginFormState extends State<LoginForm> {
 
   final TextEditingController _controllerPassword = TextEditingController();
 
-  final UserDao _userDao = UserDao();
-  final TasksDao _taskDao = TasksDao();
-
   @override
   Widget build(BuildContext context) {
-    
-    //Descomente as duas linhas abaixo para criar um usuário no banco de dados para logar no app
-    final User user = User('Murillo', '123456');
-    _userDao.create(user);
-    
-
-    //Descomente as três linhas abaixo da criação da data que será utilizada na criação de uma task
-    DateTime now = new DateTime.now();
-    DateTime dateaux = new DateTime(now.year, now.month, now.day);
-    String date = dateaux.toString();
-  
-  //Descomente a criação da task e seu salvamento no banco de dados pela taskDao
-    final Task task = Task(
-        1,
-        1,
-        0,
-        0,  
-        'Limpar a ferrari',
-        'Limpar o carro direitinho',
-        'Quintal',
-        date,
-        '19:30',
-        'images/carro.jpg',
-        '0');
-    _taskDao.create(task);
-
     return Scaffold(
       resizeToAvoidBottomInset: false,
       appBar: AppBar(
@@ -102,21 +69,23 @@ class _LoginFormState extends State<LoginForm> {
     );
   }
 
-  void _logIn(BuildContext context) {
+  void _logIn(BuildContext context) async {
     final String name = _controllerName.text;
     final String password = _controllerPassword.text;
 
     if (_checkDataFieldsLogin(name, password)) {
-      _userDao.find(name, password).then((users) {
-        if (users.length > 0) {
-          Navigator.push(
-            context,
-            MaterialPageRoute(builder: (context) => Menu(users[0])),
-          );
-        } else {
-          alertFieldsIncorrects(context);
-        }
-      });
+      try {
+        UserCredential userCredential = await FirebaseAuth.instance
+            .signInWithEmailAndPassword(email: name, password: password);
+        Navigator.push(
+          context,
+          MaterialPageRoute(
+              builder: (context) => Menu(userCredential.user!.uid)),
+        );
+      } on FirebaseAuthException catch (e) {
+        print(e);
+        alertFieldsIncorrects(context);
+      }
     }
   }
 

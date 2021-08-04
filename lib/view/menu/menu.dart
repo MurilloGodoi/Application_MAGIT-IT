@@ -1,26 +1,22 @@
 import 'package:flutter/material.dart';
-import 'package:magit/models/user.dart';
-import 'package:magit/screens/information/information.dart';
-import 'package:magit/screens/settings/settings.dart';
-import 'package:magit/screens/tasks/tasks_list.dart';
+import 'package:magit/view/information/information.dart';
+import 'package:magit/view/settings/settings.dart';
+import 'package:magit/view/tasks/tasks_list.dart';
 
 const _titleAppBar = 'MENU';
-
 const _titleDescriptionScreen = 'Escolha uma das opções:';
-
 const _titleCardTasks = 'Tarefas do dia';
 const _subtitleCardTasks = 'Veja suas tarefas de hoje';
-
 const _titleCardInformation = 'Informações';
 const _subtitleCardInformation = 'Veja as informações';
-
 const _titleCardSettings = 'Configurações';
 const _subtitleCardSettings = 'Edite suas configurações';
 
-class Menu extends StatelessWidget {
-  final User user;
 
-  const Menu(this.user);
+class Menu extends StatelessWidget {
+  final String uid;
+
+  const Menu(this.uid);
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -52,10 +48,10 @@ class Menu extends StatelessWidget {
               subtitle: Text(_subtitleCardTasks),
               onTap: () => Navigator.push(
                 context,
-                MaterialPageRoute(builder: (context) => TasksList(user)),
+                MaterialPageRoute(builder: (context) => TasksList(uid)),
               ),
             ),
-          ),
+         ),
           Card(
             child: ListTile(
               leading: Icon(Icons.article),

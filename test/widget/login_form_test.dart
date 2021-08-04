@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:magit/screens/login/login_form.dart';
+import 'package:magit/view/login/login_form.dart';
 
 void main() {
   testWidgets('Find mainImage', (WidgetTester tester) async {

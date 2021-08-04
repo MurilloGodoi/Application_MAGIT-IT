@@ -1,5 +1,5 @@
 import 'package:flutter_test/flutter_test.dart';
-import 'package:magit/models/user.dart';
+import 'package:magit/model/user.dart';
 
 void main() {
   final user = User('Zezinho239', 'Zezinho123456');

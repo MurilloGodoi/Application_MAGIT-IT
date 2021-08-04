@@ -1,4 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:magit/model/task.dart';
+import 'package:magit/view/tasks/tasks_details.dart';
+import 'package:magit/services/task_service.dart';
 
 const _titleAppBar = 'CRIANDO OCORRÊNCIA';
 
@@ -6,6 +9,9 @@ const _labelOcurrence = 'Ocorrência';
 const _labelButtonOcurrence = 'Criar Ocorrência';
 
 class OcurrenceForm extends StatefulWidget {
+  final Task task;
+
+  OcurrenceForm(this.task);
   @override
   _OcurrenceFormState createState() => _OcurrenceFormState();
 }
@@ -33,7 +39,7 @@ class _OcurrenceFormState extends State<OcurrenceForm> {
               width: double.maxFinite,
               child: ElevatedButton(
                 child: Text(_labelButtonOcurrence),
-                onPressed: () => _createOcurrence(context),
+                onPressed: () => _createOcurrence(context, widget.task),
               ),
             ),
           )
@@ -42,10 +48,14 @@ class _OcurrenceFormState extends State<OcurrenceForm> {
     );
   }
 
-  void _createOcurrence(BuildContext context) {
-    final String ocurrence = _ocurrenceController.text;
+  Future _createOcurrence(BuildContext context, Task task) async {
+    final String occurrence = _ocurrenceController.text;
 
-    if (_checkDataFieldOcurrence(ocurrence)) {
+    if (_checkDataFieldOcurrence(occurrence)) {
+      TaskService.createOccurrenceTask(occurrence, task).then((value) =>
+          alertSuccess(
+                  context, 'Ocorrência Criada', 'Ocorrência criada com sucesso')
+             );
       Navigator.pop(context);
     } else {
       alertOcurrenceIncorrects(context);
